@@ -4,19 +4,31 @@
   become: true
   pre_tasks:
 
-  - name: install updates (CentOS)
+  - name: update repo cache (CentOS)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "CentOS"
 
-  - name: install updates (Debian)
+  - name: update repo cache (Debian)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Debian"
+
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: add ssh key for simone
+      tags: always
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWYgxq1LK8cqFmgmHuRTe8nB56JlrX0yZTOFC0twliR ansible"
+
 
 - hosts: workstations
   become: true
@@ -34,6 +46,7 @@
       mode: 0755
       owner: root
       group: root
+
 
 - hosts: web_servers
   become: true
@@ -90,6 +103,7 @@
       group: root
       mode: 0644
 
+
 - hosts: db_servers
   become: true
   tasks:
@@ -107,6 +121,7 @@
       name: mariadb-server
       state: latest
     when: ansible_distribution == "Debian"
+
 
 - hosts: file_servers
   become: true
