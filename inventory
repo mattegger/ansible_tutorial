@@ -7,3 +7,6 @@ deb-server2
 
 [file_servers]
 deb-server3
+
+[workstations]
+deb-workstation
